@@ -1,0 +1,16 @@
+# https://copier.readthedocs.io/en/stable/configuring/#questions
+project_name:
+    type: str
+    help: What is your project name?
+
+use_vscode:
+    type: bool
+    default: yes
+    help: Do you want to use VSCode as IDE?
+
+use_spa_htmx_tailwind:
+    type: bool
+    default: yes
+    help: Do you want to generate an Django template + HTMX + TailwindCSS landing page? (If not you'll not be able to prototype right away and need to cleanup dead code yourself.)
+
+# https://copier.readthedocs.io/en/stable/configuring/

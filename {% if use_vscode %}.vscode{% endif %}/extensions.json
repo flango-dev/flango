@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "batisteo.vscode-django",
+        "charliermarsh.ruff",
+        "bradlc.vscode-tailwindcss"
+    ]
+}

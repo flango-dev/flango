@@ -1,0 +1,72 @@
+# aliases
+alias vs := venv-setup
+alias vr := venv-recreate
+alias rul := requirements-update-local
+alias rup := requirements-update-production
+alias db := database-backup
+alias dr := database-restore
+
+default:
+  just --list
+
+# setup venv
+venv-setup:
+  scripts/setup_venv.sh
+
+# recreate venv
+venv-recreate: && venv-setup
+  rm -rf .venv
+
+# update development requirements-dev.txt
+requirements-update-local:
+  uv pip compile --extra dev --generate-hashes pyproject.toml -o requirements_dev.txt
+
+# update production requirements.txt
+requirements-update-production:
+  uv pip compile --generate-hashes pyproject.toml -o requirements.txt
+
+# generate secret key
+secret-key-generate:
+  python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+
+# setup local database
+database-setup-local:
+  scripts/setup_database.sh
+
+# create fresh local database
+database-recreate-local: && database-setup-local
+  rm -rf tmp/db.sqlite3
+
+# create a backup of all databases in /tmp/db.sqlite3 into the /bkp/db.dump (overrides previous backup)
+database-backup:
+  .venv/bin/python manage.py dbbackup --noinput -q -c -o bkp
+
+# restore a backup off all databases in /bkp/db.dump into /tmp/db.sqlite3 (keeps /tmp/db_old.sqlite3)
+database-restore:
+  mv tmp/db.sqlite3 tmp/db_old.sqlite3
+  .venv/bin/python manage.py dbrestore --noinput
+
+# make migrations and migrate
+database-migrate-local:
+  .venv/bin/python manage.py makemigrations
+  .venv/bin/python manage.py migrate
+
+# git push force (safe)
+git-push-force:
+  git push --force-with-lease --force-if-includes
+
+# run precommit commands
+precommit:
+  .venv/bin/ruff check --fix
+  .venv/bin/ruff format
+
+# check collection of static files
+collect-staticfiles-prod:
+  .venv/bin/python manage.py collectstatic
+
+# setup project
+project-setup: venv-setup database-setup-local
+
+# run project using granian asgi server
+project-run:
+  granian --interface asginl --reload {{project_name}}.asgi:application

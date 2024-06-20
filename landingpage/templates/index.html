@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <a href="{% url 'account_logout' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold inline-block p-4 float-right">
+    Logout
+  </a>
+  {% else %}
+  <a href="{% url 'account_login' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold inline-block p-4 float-right">
+    Login
+  </a>
+  {% endif %}
+  <div class="max-w-md mx-auto bg-blue-100 border-l-4 border-blue-500 text-blue-900 p-4" role="alert">
+    <p class="font-bold">Public content</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  </div>
+  {% if user.is_authenticated %}
+  <div class="max-w-md mx-auto bg-red-100 border-l-4 border-red-500 text-red-900 p-4" role="alert">
+    <p class="font-bold">Private content</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  </div>
+  {% else %}
+  {% endif %}
+{% endblock content %}

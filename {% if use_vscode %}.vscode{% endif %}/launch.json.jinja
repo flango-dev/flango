@@ -1,0 +1,20 @@
+// https://code.visualstudio.com/docs/editor/variables-reference
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Project (local machine)",
+      "type": "debugpy",
+      "request": "launch",
+      "stopOnEntry": false,
+      "program": "${workspaceRoot}/manage.py",
+      "args": [
+        "tailwind",
+        "--settings={{project_name}}.settings.local",
+        "runserver",
+        "--nostatic",
+      ],
+      "preLaunchTask": "collectstatic",
+    },
+  ]
+}
